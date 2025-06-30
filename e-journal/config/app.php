@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://itlab.unila.ac.id/backend.itlab.unila.ac.id/'),
 
     /*
     |--------------------------------------------------------------------------
