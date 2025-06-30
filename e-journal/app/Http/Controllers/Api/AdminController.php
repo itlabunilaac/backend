@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 class AdminController extends Controller
 {
     /**
-     * Register a new admin
+     * Register a new admin - Simplified version
      */
     public function register(Request $request)
     {
@@ -37,7 +37,8 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $admin->createToken('admin-token')->plainTextToken;
+        // Generate simple token for localStorage
+        $token = bin2hex(random_bytes(40));
 
         return response()->json([
             'success' => true,
@@ -50,7 +51,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Login admin
+     * Login admin - Simplified version
      */
     public function login(Request $request)
     {
@@ -78,7 +79,8 @@ class AdminController extends Controller
             ], 401);
         }
 
-        $token = $admin->createToken('admin-token')->plainTextToken;
+        // Generate simple token for localStorage
+        $token = bin2hex(random_bytes(40));
 
         return response()->json([
             'success' => true,
@@ -108,7 +110,7 @@ class AdminController extends Controller
             ], 422);
         }
 
-        $admin = Auth::guard('sanctum')->user();
+        $admin = $request->user();
 
         if (!Hash::check($request->current_password, $admin->password)) {
             return response()->json([
@@ -130,13 +132,14 @@ class AdminController extends Controller
     /**
      * Logout admin
      */
+    /**
+     * Logout admin - Simplified version
+     */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-
         return response()->json([
             'success' => true,
-            'message' => 'Logged out successfully'
+            'message' => 'Logged out successfully. Please clear token from localStorage.'
         ], 200);
     }
 
@@ -145,6 +148,11 @@ class AdminController extends Controller
      */
     public function profile(Request $request)
     {
+        // Clean any previous output to prevent JSON parsing issues
+        if (ob_get_level()) {
+            ob_clean();
+        }
+        
         return response()->json([
             'success' => true,
             'data' => $request->user()

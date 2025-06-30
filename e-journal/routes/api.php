@@ -5,9 +5,43 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\JurnalController;
 use App\Http\Controllers\Api\TestController;
+use App\Http\Controllers\Api\SampleController;
 
-// Test route
-Route::get('test', [TestController::class, 'test']);
+// Test routes
+Route::get('test', [TestController::class, 'testPublic']);
+Route::get('test-token', [TestController::class, 'testToken'])->middleware('admin.auth');
+
+// Sample data routes (for demo purposes)
+Route::post('sample/generate', [SampleController::class, 'generateSampleData']);
+Route::get('sample/stats', [SampleController::class, 'getStats']);
+
+// API Status and Info
+Route::get('status', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'E-Journal API is running!',
+        'version' => '1.0.0',
+        'timestamp' => now()->toISOString(),
+        'endpoints' => [
+            'public' => [
+                'GET /api/jurnal - List journals',
+                'GET /api/jurnal/{id} - Get journal detail',
+                'GET /api/jurnal/subjects - Get subjects',
+                'GET /api/jurnal/akreditasi - Get akreditasi',
+                'POST /api/admin/login - Admin login',
+                'POST /api/admin/register - Admin register'
+            ],
+            'admin' => [
+                'GET /api/admin/profile - Admin profile',
+                'POST /api/admin/change-password - Change password',
+                'POST /api/admin/logout - Logout',
+                'POST /api/admin/jurnal - Create journal',
+                'PUT /api/admin/jurnal/{id} - Update journal',
+                'DELETE /api/admin/jurnal/{id} - Delete journal'
+            ]
+        ]
+    ]);
+});
 
 // Public routes
 Route::prefix('admin')->group(function () {
@@ -24,7 +58,7 @@ Route::prefix('jurnal')->group(function () {
 });
 
 // Protected admin routes
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['admin.auth'])->group(function () {
     // Admin profile routes
     Route::prefix('admin')->group(function () {
         Route::get('profile', [AdminController::class, 'profile']);

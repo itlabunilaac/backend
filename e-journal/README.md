@@ -1,52 +1,308 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 E-Journal RESTful API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-red)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.1+-blue)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-orange)](https://mysql.com)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## About Laravel
+RESTful API untuk sistem e-journal dengan fitur autentikasi admin, CRUD jurnal, search, filter, sort, pagination, dan upload foto. Dilengkapi dengan **demo UI interaktif** yang mengimplementasikan **semua endpoint**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🔐 Admin Authentication
+- ✅ Register admin baru
+- ✅ Login dengan token authentication
+- ✅ Profile management
+- ✅ Change password
+- ✅ Logout
+- ✅ Middleware admin auth
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 📖 Journal Management (CRUD)
+- ✅ Create jurnal (admin only)
+- ✅ Read jurnal (public + admin)
+- ✅ Update jurnal (admin only)
+- ✅ Delete jurnal (admin only)
+- ✅ Upload foto jurnal
+- ✅ Increment views otomatis
 
-## Learning Laravel
+### 🔍 Advanced Search & Filter
+- ✅ Search by keyword
+- ✅ Filter by subject
+- ✅ Filter by akreditasi
+- ✅ Sort by multiple fields (views, date, title, author)
+- ✅ Sort order (ASC/DESC)
+- ✅ Pagination with metadata
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📊 Special Features
+- ✅ **Jurnal dengan views terbanyak**
+- ✅ **Top N filtering**
+- ✅ **API status monitoring**
+- ✅ **Sample data generation**
+- ✅ **Data statistics**
+- ✅ **Interactive demo UI**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🌐 Demo UI
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**URL**: `http://127.0.0.1:8000/demo`
 
-## Laravel Sponsors
+### 🎯 Complete Demo Coverage
+Demo UI menyediakan interface interaktif untuk **SEMUA endpoint**:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### 📊 **NEW! Jurnal dengan Views Terbanyak**
+- Top N jurnal (5, 10, 20, semua)
+- Filter by subject
+- Auto-sort by views descending
 
-### Premium Partners
+#### 🔍 **NEW! Advanced Sort & Pagination**
+- 5 sort fields: views, created_at, updated_at, judul, penulis
+- ASC/DESC sort order
+- Per page control (5-20 items)
+- Page navigation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+#### 🔍 **NEW! API Status & Info**
+- Server status check
+- API version info
+- Endpoint documentation
+- Server timestamp
 
-## Contributing
+#### 📊 **NEW! Demo Data Management**
+- Generate 12 sample journals
+- Views range: 100-2500
+- 4 subjects, 4 akreditasi types
+- Data statistics dashboard
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🎨 Demo Features
+- 🔐 **Authentication Demo**: Login, register, profile, change password
+- 📖 **Journal CRUD Demo**: Create, read, update, delete dengan upload foto
+- 🔍 **Search & Filter Demo**: Keyword, subject, akreditasi filtering
+- 📊 **Advanced Features Demo**: Sort, pagination, top views
+- 🧪 **API Testing**: Token test, public test, status check
+- 📱 **Responsive UI**: Modern, beautiful interface
+
+## 🛠️ Installation
+
+### Prerequisites
+- PHP 8.1+
+- Composer
+- MySQL 8.0+
+- Laravel 11.x
+
+### Quick Setup
+```bash
+# Clone repository
+git clone <repository-url>
+cd e-journal
+
+# Install dependencies
+composer install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Configure database (.env)
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=e_journal
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Run migrations
+php artisan migrate
+
+# Start server
+php artisan serve
+```
+
+### 📊 Generate Demo Data
+```bash
+# Via API (recommended)
+POST http://127.0.0.1:8000/api/sample/generate
+
+# Via demo UI
+http://127.0.0.1:8000/demo → Docs tab → Generate Sample Data
+```
+
+## 📚 API Documentation
+
+### Base URL
+```
+http://127.0.0.1:8000/api
+```
+
+### 🔗 Public Endpoints
+- `GET /status` - API status & info
+- `GET /jurnal` - List jurnal dengan filtering
+- `GET /jurnal/{id}` - Detail jurnal + increment views
+- `GET /jurnal/subjects` - List unique subjects
+- `GET /jurnal/akreditasi` - List unique akreditasi
+- `POST /admin/register` - Register admin
+- `POST /admin/login` - Login admin
+
+### 🔒 Admin Endpoints (Requires Token)
+- `GET /admin/profile` - Admin profile
+- `POST /admin/change-password` - Change password
+- `POST /admin/logout` - Logout
+- `POST /admin/jurnal` - Create jurnal
+- `PUT /admin/jurnal/{id}` - Update jurnal
+- `DELETE /admin/jurnal/{id}` - Delete jurnal
+
+### 🧪 Test Endpoints
+- `GET /test` - Public test
+- `GET /test-token` - Admin token test (requires auth)
+
+### 📊 Sample Data Endpoints
+- `POST /sample/generate` - Generate sample data
+- `GET /sample/stats` - Get data statistics
+
+## 🔐 Authentication
+
+API menggunakan custom token authentication:
+
+```javascript
+// Headers
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+## 📊 Advanced Query Parameters
+
+### GET /api/jurnal
+```
+?search=keyword          // Search dalam judul, deskripsi, penulis
+&subject=Technology      // Filter by subject
+&akreditasi=Sinta 1     // Filter by akreditasi
+&sort_by=views          // Sort: views, created_at, updated_at, judul, penulis
+&order=desc             // Order: asc, desc
+&per_page=10            // Items per page (1-50)
+&page=1                 // Page number
+```
+
+### Example: Top Views Jurnal
+```
+GET /api/jurnal?sort_by=views&order=desc&per_page=10
+```
+
+## 🎯 Demo Scenarios
+
+### 1. 🏆 Top Views Analysis
+```bash
+# Generate sample data
+POST /api/sample/generate
+
+# Get top 5 jurnal with most views
+GET /api/jurnal?sort_by=views&order=desc&per_page=5
+
+# Filter top views by subject
+GET /api/jurnal?sort_by=views&order=desc&subject=Teknologi%20Informasi
+```
+
+### 2. 📄 Pagination Testing
+```bash
+# Page 1 with 5 items
+GET /api/jurnal?per_page=5&page=1
+
+# Page 2 with sort
+GET /api/jurnal?per_page=5&page=2&sort_by=created_at&order=desc
+```
+
+### 3. 🔍 Search & Filter
+```bash
+# Search with multiple filters
+GET /api/jurnal?search=machine&subject=Teknologi&akreditasi=Sinta%201
+```
+
+## 🗂️ Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/Api/
+│   │   ├── AdminController.php      # Admin auth & profile
+│   │   ├── JurnalController.php     # Journal CRUD & search
+│   │   ├── TestController.php       # Testing endpoints
+│   │   └── SampleController.php     # Sample data management
+│   └── Middleware/
+│       └── AdminAuth.php            # Token authentication
+├── Models/
+│   ├── Admin.php                    # Admin model
+│   └── Jurnal.php                   # Journal model with scopes
+database/
+├── migrations/                      # Database schema
+└── seeders/                        # Sample data
+public/
+└── demo.html                       # Interactive demo UI
+routes/
+├── api.php                         # API routes
+└── web.php                         # Web routes
+```
+
+## 📖 Documentation Files
+
+- 📋 `API_DOCUMENTATION.md` - Complete API reference
+- 🔧 `SETUP_MYSQL.md` - MySQL setup guide
+- 🎨 `DEMO_UI_GUIDE.md` - Demo UI usage guide
+- 📊 `IMPLEMENTATION_SUMMARY.md` - Implementation details
+- 🔐 `TOKEN_AUTHENTICATION_FIX.md` - Auth system docs
+- 🎉 `DEMO_COMPLETE.md` - Complete feature overview
+- 🆕 `NEW_DEMO_FEATURES.md` - Latest feature additions
+
+## 🧪 Testing
+
+### Manual Testing
+```bash
+# Test API status
+curl -X GET "http://127.0.0.1:8000/api/status"
+
+# Test top views
+curl -X GET "http://127.0.0.1:8000/api/jurnal?sort_by=views&order=desc&per_page=5"
+
+# Test with auth (replace {token})
+curl -X GET "http://127.0.0.1:8000/api/admin/profile" \
+  -H "Authorization: Bearer {token}"
+```
+
+### Demo UI Testing
+1. 🌐 Access: `http://127.0.0.1:8000/demo`
+2. 📊 Generate sample data
+3. 🧪 Test all features interactively
+4. 📱 Ready for presentation!
+
+## 🎊 What's New
+
+### ✨ Latest Updates
+- ✅ **Top Views Demo** - Jurnal dengan views terbanyak
+- ✅ **Advanced Pagination** - Per page control & navigation
+- ✅ **API Status Check** - Server monitoring
+- ✅ **Sample Data Management** - Generate & statistics
+- ✅ **Enhanced Sorting** - 5 sort fields with ASC/DESC
+- ✅ **Complete Demo Coverage** - All endpoints have demos
+
+### 🎯 100% Complete
+Demo UI now covers **ALL endpoints** with interactive interface!
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Laravel Framework
+- MySQL Database
+- Modern web technologies
+
+---
+
+**🎉 E-Journal API with Complete Interactive Demo - Ready for Production! 🎉**
 
 ## Code of Conduct
 

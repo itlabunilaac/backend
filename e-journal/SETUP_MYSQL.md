@@ -85,4 +85,23 @@ Semua endpoint REST API sudah siap:
 ✅ Token-based authentication
 ✅ Input validation
 
+## 🎮 Demo UI Interface
+
+### Akses Demo UI:
+- **URL:** http://127.0.0.1:8000/demo
+- **Atau:** http://127.0.0.1:8000/api-demo
+
+### Features Demo UI:
+✅ **Authentication Tab:** Login, Register, Profile, Change Password
+✅ **Jurnal API Tab:** Search, Filter, Sort, Get Detail (Public)
+✅ **Admin Panel Tab:** Create, Update, Delete Jurnal (Admin Only)
+✅ **Documentation Tab:** Complete API documentation
+
+### Demo UI Capabilities:
+- 🔐 Real-time authentication testing
+- 📱 Interactive form untuk test semua endpoint
+- 📊 Live response display dengan JSON formatting
+- 🎯 Token management otomatis
+- 🔄 Error handling dan status indicators
+
 **REST API E-Journal sudah COMPLETE! 🎉**

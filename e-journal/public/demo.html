@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Journal API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .endpoint-section {
+            margin-bottom: 40px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .endpoint-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .method-get { background: #28a745; color: white; }
+        .method-post { background: #007bff; color: white; }
+        .method-put { background: #ffc107; color: black; }
+        .method-delete { background: #dc3545; color: white; }
+
+        .endpoint-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .response-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .response-content {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .status-indicator {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .auth-status {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .token-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .json-viewer {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .json-key { color: #63b3ed; }
+        .json-string { color: #68d391; }
+        .json-number { color: #f6ad55; }
+        .json-boolean { color: #fc8181; }
+        .json-null { color: #a0aec0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 E-Journal API Demo</h1>
+            <p>Interactive demo untuk testing semua endpoint REST API E-Journal</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('auth')">🔐 Authentication</button>
+            <button class="nav-tab" onclick="showTab('jurnal')">📚 Jurnal API</button>
+            <button class="nav-tab" onclick="showTab('admin')">👨‍💼 Admin Panel</button>
+            <button class="nav-tab" onclick="showTab('docs')">📖 Documentation</button>
+        </div>
+
+        <div class="content">
+            <!-- Authentication Tab -->
+            <div id="auth" class="tab-content active">
+                <div class="auth-status" id="authStatus">
+                    <strong>Status:</strong> <span id="loginStatus">Belum login</span>
+                    <div id="tokenDisplay" style="display: none;">
+                        <strong>Token:</strong>
+                        <div class="token-display" id="currentToken"></div>
+                        <button onclick="copyToken()" class="btn-secondary" style="margin-top: 10px;">📋 Copy Token</button>
+                    </div>
+                    
+                    <!-- Manual Token Input -->
+                    <div class="endpoint-section" style="margin-top: 20px;">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Manual Token Input</div>
+                            <span class="badge badge-info">Simplified localStorage system</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p><strong>Info:</strong> Sistem ini menggunakan localStorage untuk menyimpan token. Token hanya perlu format yang valid (minimal 40 karakter). Server akan menerima token apa pun yang terlihat valid.</p>
+                            <p>Jika Anda memiliki token dari login sebelumnya, masukkan di sini:</p>
+                            <input type="text" id="manualToken" placeholder="Paste token di sini..." style="width: 100%; margin-bottom: 10px;">
+                            <button onclick="setManualToken()" class="btn-secondary">🔑 Set Token</button>
+                            <button onclick="clearToken()" class="btn-danger" style="margin-left: 10px;">🗑️ Clear Token</button>
+                            <button onclick="generateDemoToken()" class="btn btn-success" style="margin-left: 10px;">🎯 Generate Demo Token</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <!-- Login Admin -->
+                    <div class="endpoint-section">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Login Admin</div>
+                            <span class="endpoint-method method-post">POST</span>
+                            <code>/api/admin/login</code>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="form-group">
+                                <label class="form-label">Email/Username:</label>
+                                <input type="text" class="form-input" id="loginEmail" value="admin@example.com" placeholder="admin@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password:</label>
+                                <input type="password" class="form-input" id="loginPassword" value="password" placeholder="password">
+                            </div>
+                            <button class="btn btn-primary" onclick="adminLogin()">Login</button>
+                            <div id="loginResponse" class="response-container" style="display: none;">
+                                <div class="response-header">Response:</div>
+                                <div class="response-content" id="loginResponseContent"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Register Admin -->
+                    <div class="endpoint-section">
+                        <div class="endpoint-header">
+                            <div class="endpoint-title">Register Admin</div>
+                            <span class="endpoint-method method-post">POST</span>
+                            <code>/api/admin/register</code>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="form-group">
+                                <label class="form-label">Username:</label>
+                                <input type="text" class="form-input" id="regUsername" placeholder="newadmin">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email:</label>
+                                <input type="email" class="form-input" id="regEmail" placeholder="newadmin@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password:</label>
+                                <input type="password" class="form-input" id="regPassword" placeholder="password123">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm Password:</label>
+                                <input type="password" class="form-input" id="regPasswordConfirm" placeholder="password123">
+                            </div>
+                            <button class="btn btn-success" onclick="adminRegister()">Register</button>
+                            <div id="registerResponse" class="response-container" style="display: none;">
+                                <div class="response-header">Response:</div>
+                                <div class="response-content" id="registerResponseContent"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Profile & Actions -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Admin Actions (Requires Token)</div>
+                    </div>
+                    <div class="endpoint-body">
+                        <button class="btn btn-primary" onclick="getProfile()">Get Profile</button>
+                        <button class="btn btn-primary" onclick="testToken()">Test Token</button>
+                        <button class="btn btn-primary" onclick="showChangePassword()">Change Password</button>
+                        <button class="btn btn-danger" onclick="adminLogout()">Logout</button>
+                        
+                        <div id="changePasswordForm" style="display: none; margin-top: 20px;">
+                            <div class="form-group">
+                                <label class="form-label">Current Password:</label>
+                                <input type="password" class="form-input" id="currentPassword">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password:</label>
+                                <input type="password" class="form-input" id="newPassword">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password:</label>
+                                <input type="password" class="form-input" id="newPasswordConfirm">
+                            </div>
+                            <button class="btn btn-success" onclick="changePassword()">Change Password</button>
+                        </div>
+
+                        <div id="adminResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="adminResponseContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jurnal API Tab -->
+            <div id="jurnal" class="tab-content">
+                <!-- Get All Jurnal -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Get All Jurnal (Public)</div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <code>/api/jurnal</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="grid">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Search Keyword:</label>
+                                    <input type="text" class="form-input" id="searchKeyword" placeholder="machine learning">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Subject Filter:</label>
+                                    <select class="form-input" id="subjectFilter">
+                                        <option value="">-- All Subjects --</option>
+                                        <option value="Teknologi Informasi">Teknologi Informasi</option>
+                                        <option value="Ekonomi">Ekonomi</option>
+                                        <option value="Lingkungan">Lingkungan</option>
+                                        <option value="Teknik Industri">Teknik Industri</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Akreditasi Filter:</label>
+                                    <select class="form-input" id="akreditasiFilter">
+                                        <option value="">-- All Akreditasi --</option>
+                                        <option value="Sinta 1">Sinta 1</option>
+                                        <option value="Sinta 2">Sinta 2</option>
+                                        <option value="Sinta 3">Sinta 3</option>
+                                        <option value="Scopus">Scopus</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sort By:</label>
+                                    <select class="form-input" id="sortBy">
+                                        <option value="">-- Default --</option>
+                                        <option value="views">Views</option>
+                                        <option value="created_at">Date Created</option>
+                                        <option value="judul">Title</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sort Order:</label>
+                                    <select class="form-input" id="sortOrder">
+                                        <option value="desc">Descending (Z-A, 9-1)</option>
+                                        <option value="asc">Ascending (A-Z, 1-9)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="getAllJurnal()">Get Jurnal</button>
+                        <button class="btn btn-success" onclick="getSubjects()">Get Subjects</button>
+                        <button class="btn btn-success" onclick="getAkreditasi()">Get Akreditasi</button>
+                        
+                        <div id="jurnalListResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="jurnalListContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jurnal dengan Views Terbanyak -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Jurnal dengan Views Terbanyak</div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <code>/api/jurnal?sort_by=views&order=desc</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="grid">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Limit (Top N):</label>
+                                    <select class="form-input" id="topViewsLimit">
+                                        <option value="5">Top 5</option>
+                                        <option value="10" selected>Top 10</option>
+                                        <option value="20">Top 20</option>
+                                        <option value="">All</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Subject Filter:</label>
+                                    <select class="form-input" id="topViewsSubject">
+                                        <option value="">-- All Subjects --</option>
+                                        <option value="Teknologi Informasi">Teknologi Informasi</option>
+                                        <option value="Ekonomi">Ekonomi</option>
+                                        <option value="Lingkungan">Lingkungan</option>
+                                        <option value="Teknik Industri">Teknik Industri</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" onclick="getTopViewsJurnal()">📊 Get Top Views Jurnal</button>
+                        
+                        <div id="topViewsResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="topViewsContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Sort & Pagination -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Advanced Sort & Pagination</div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <code>/api/jurnal?sort_by=&order=&per_page=&page=</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="grid">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Sort By:</label>
+                                    <select class="form-input" id="advancedSortBy">
+                                        <option value="">-- Default --</option>
+                                        <option value="views">Views</option>
+                                        <option value="created_at">Date Created</option>
+                                        <option value="updated_at">Date Updated</option>
+                                        <option value="judul">Title</option>
+                                        <option value="penulis">Author</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sort Order:</label>
+                                    <select class="form-input" id="sortOrder">
+                                        <option value="desc">Descending (Z-A, 9-1)</option>
+                                        <option value="asc">Ascending (A-Z, 1-9)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Per Page:</label>
+                                    <select class="form-input" id="perPage">
+                                        <option value="5">5 per page</option>
+                                        <option value="10" selected>10 per page</option>
+                                        <option value="15">15 per page</option>
+                                        <option value="20">20 per page</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Page:</label>
+                                    <input type="number" class="form-input" id="pageNumber" value="1" min="1" placeholder="1">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-info" onclick="getAdvancedJurnal()">🔍 Advanced Search</button>
+                        
+                        <div id="advancedResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="advancedContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Get Jurnal by ID -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Get Jurnal by ID (Increment Views)</div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <code>/api/jurnal/{id}</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="form-group">
+                            <label class="form-label">Jurnal ID:</label>
+                            <input type="number" class="form-input" id="jurnalId" value="1" placeholder="1">
+                        </div>
+                        <button class="btn btn-primary" onclick="getJurnalById()">Get Jurnal Detail</button>
+                        
+                        <div id="jurnalDetailResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="jurnalDetailContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel Tab -->
+            <div id="admin" class="tab-content">
+                <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+                    <strong>💡 Simplified System:</strong> 
+                    <p>Sistem ini telah disederhanakan menggunakan localStorage untuk token. Anda dapat:</p>
+                    <ul>
+                        <li>🔑 Login normal untuk mendapatkan token</li>
+                        <li>🎯 Generate demo token langsung (tombol di tab Authentication)</li>
+                        <li>📋 Input token manual jika diperlukan</li>
+                    </ul>
+                    <p>Semua fitur admin akan bekerja dengan token apa pun yang valid!</p>
+                </div>
+
+                <!-- Create Jurnal -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Create Jurnal (Admin Only)</div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <code>/api/admin/jurnal</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="grid">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Judul:</label>
+                                    <input type="text" class="form-input" id="createJudul" placeholder="Judul Jurnal Baru">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Subject:</label>
+                                    <input type="text" class="form-input" id="createSubject" placeholder="Teknologi Informasi">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Akreditasi:</label>
+                                    <select class="form-input" id="createAkreditasi">
+                                        <option value="Sinta 1">Sinta 1</option>
+                                        <option value="Sinta 2">Sinta 2</option>
+                                        <option value="Sinta 3">Sinta 3</option>
+                                        <option value="Scopus">Scopus</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Penerbit:</label>
+                                    <input type="text" class="form-input" id="createPenerbit" placeholder="Nama Penerbit">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Link Akreditasi:</label>
+                                    <input type="url" class="form-input" id="createLinkAkreditasi" placeholder="https://sinta.ristekbrin.go.id">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Link Penerbit:</label>
+                                    <input type="url" class="form-input" id="createLinkPenerbit" placeholder="https://publisher.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Foto (optional):</label>
+                                    <input type="file" class="form-input" id="createFoto" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Deskripsi:</label>
+                            <textarea class="form-input form-textarea" id="createDeskripsi" placeholder="Deskripsi lengkap jurnal..."></textarea>
+                        </div>
+                        <button class="btn btn-success" onclick="createJurnal()">Create Jurnal</button>
+                        
+                        <div id="createResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="createResponseContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Jurnal -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Update Jurnal (Admin Only)</div>
+                        <span class="endpoint-method method-put">PUT</span>
+                        <code>/api/admin/jurnal/{id}</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="form-group">
+                            <label class="form-label">Jurnal ID to Update:</label>
+                            <input type="number" class="form-input" id="updateId" value="1" placeholder="1">
+                        </div>
+                        <div class="grid">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Judul (optional):</label>
+                                    <input type="text" class="form-input" id="updateJudul" placeholder="Updated Title">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Subject (optional):</label>
+                                    <input type="text" class="form-input" id="updateSubject" placeholder="Updated Subject">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Akreditasi (optional):</label>
+                                    <select class="form-input" id="updateAkreditasi">
+                                        <option value="">-- No Change --</option>
+                                        <option value="Sinta 1">Sinta 1</option>
+                                        <option value="Sinta 2">Sinta 2</option>
+                                        <option value="Sinta 3">Sinta 3</option>
+                                        <option value="Scopus">Scopus</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Foto (optional):</label>
+                                    <input type="file" class="form-input" id="updateFoto" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="updateJurnal()">Update Jurnal</button>
+                        
+                        <div id="updateResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="updateResponseContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Jurnal -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Delete Jurnal (Admin Only)</div>
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <code>/api/admin/jurnal/{id}</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="form-group">
+                            <label class="form-label">Jurnal ID to Delete:</label>
+                            <input type="number" class="form-input" id="deleteId" placeholder="6">
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteJurnal()">Delete Jurnal</button>
+                        
+                        <div id="deleteResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="deleteResponseContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documentation Tab -->
+            <div id="docs" class="tab-content">
+                <!-- API Status Check -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">API Status & Info</div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <code>/api/status</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Check API status, version, and available endpoints:</p>
+                        <button class="btn btn-info" onclick="getApiStatus()">🔍 Check API Status</button>
+                        
+                        <div id="statusResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="statusContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Data Management -->
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">Demo Data Management</div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <code>/api/sample/generate</code>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Generate sample journal data with different view counts for testing demo features:</p>
+                        <div class="grid">
+                            <div>
+                                <button class="btn btn-success" onclick="generateSampleData()">📊 Generate Sample Data</button>
+                                <button class="btn btn-info" onclick="getSampleStats()">📈 Get Data Statistics</button>
+                            </div>
+                        </div>
+                        
+                        <div id="sampleResponse" class="response-container" style="display: none;">
+                            <div class="response-header">Response:</div>
+                            <div class="response-content" id="sampleContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint-section">
+                    <div class="endpoint-header">
+                        <div class="endpoint-title">📖 API Documentation</div>
+                    </div>
+                    <div class="endpoint-body">
+                        <h3>Base URL</h3>
+                        <p><code>http://127.0.0.1:8000/api</code></p>
+
+                        <h3>Authentication</h3>
+                        <p>API menggunakan Laravel Sanctum untuk authentication. Setelah login, gunakan token di header:</p>
+                        <p><code>Authorization: Bearer {token}</code></p>
+
+                        <h3>Response Format</h3>
+                        <div class="json-viewer">
+{
+  "success": true,
+  "message": "Success message",
+  "data": {}
+}
+                        </div>
+
+                        <h3>Public Endpoints</h3>
+                        <ul>
+                            <li><strong>GET</strong> <code>/jurnal</code> - List jurnal dengan pagination, search, filter</li>
+                            <li><strong>GET</strong> <code>/jurnal/{id}</code> - Detail jurnal + increment views</li>
+                            <li><strong>GET</strong> <code>/jurnal/subjects</code> - List unique subjects</li>
+                            <li><strong>GET</strong> <code>/jurnal/akreditasi</code> - List unique akreditasi</li>
+                            <li><strong>POST</strong> <code>/admin/register</code> - Register admin baru</li>
+                            <li><strong>POST</strong> <code>/admin/login</code> - Login admin</li>
+                        </ul>
+
+                        <h3>Admin Endpoints (Requires Token)</h3>
+                        <ul>
+                            <li><strong>GET</strong> <code>/admin/profile</code> - Profile admin</li>
+                            <li><strong>POST</strong> <code>/admin/change-password</code> - Ganti password</li>
+                            <li><strong>POST</strong> <code>/admin/logout</code> - Logout admin</li>
+                            <li><strong>POST</strong> <code>/admin/jurnal</code> - Create jurnal</li>
+                            <li><strong>PUT</strong> <code>/admin/jurnal/{id}</code> - Update jurnal</li>
+                            <li><strong>DELETE</strong> <code>/admin/jurnal/{id}</code> - Delete jurnal</li>
+                        </ul>
+
+                        <h3>Query Parameters untuk /jurnal</h3>
+                        <ul>
+                            <li><code>search</code> - Keyword pencarian</li>
+                            <li><code>subject</code> - Filter berdasarkan subject</li>
+                            <li><code>akreditasi</code> - Filter berdasarkan akreditasi</li>
+                            <li><code>sort_by</code> - Sort berdasarkan (views, created_at, judul)</li>
+                            <li><code>sort_order</code> - Urutan sort (asc, desc)</li>
+                            <li><code>page</code> - Halaman pagination</li>
+                            <li><code>per_page</code> - Jumlah per halaman</li>
+                        </ul>
+
+                        <h3>Default Admin Account</h3>
+                        <p><strong>Email:</strong> admin@example.com</p>
+                        <p><strong>Password:</strong> password</p>
+
+                        <h3>Features</h3>
+                        <ul>
+                            <li>✅ Full CRUD operations untuk jurnal</li>
+                            <li>✅ Search & filter functionality</li>
+                            <li>✅ File upload untuk foto jurnal</li>
+                            <li>✅ Auto-increment views</li>
+                            <li>✅ Pagination support</li>
+                            <li>✅ Token-based authentication</li>
+                            <li>✅ Input validation</li>
+                            <li>✅ Soft delete</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8000/api';
+        let currentToken = localStorage.getItem('authToken');
+
+        // Tab management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Update auth status display
+        function updateAuthStatus() {
+            const statusEl = document.getElementById('loginStatus');
+            const tokenEl = document.getElementById('tokenDisplay');
+            const currentTokenEl = document.getElementById('currentToken');
+
+            if (currentToken) {
+                statusEl.textContent = 'Logged in ✅';
+                statusEl.className = 'status-success';
+                tokenEl.style.display = 'block';
+                currentTokenEl.textContent = currentToken;
+            } else {
+                statusEl.textContent = 'Belum login ❌';
+                statusEl.className = 'status-error';
+                tokenEl.style.display = 'none';
+            }
+        }
+
+        // Copy token to clipboard
+        function copyToken() {
+            if (currentToken) {
+                navigator.clipboard.writeText(currentToken).then(() => {
+                    alert('Token berhasil dicopy ke clipboard!');
+                }).catch(err => {
+                    console.error('Gagal copy token:', err);
+                    alert('Gagal copy token. Silakan copy manual.');
+                });
+            }
+        }
+
+        // Set manual token
+        function setManualToken() {
+            const manualToken = document.getElementById('manualToken').value.trim();
+            if (manualToken) {
+                currentToken = manualToken;
+                localStorage.setItem('authToken', currentToken);
+                updateAuthStatus();
+                document.getElementById('manualToken').value = '';
+                alert('Token berhasil diset!');
+            } else {
+                alert('Silakan masukkan token terlebih dahulu.');
+            }
+        }
+
+        // Generate demo token for testing
+        function generateDemoToken() {
+            // Generate random 80-character token
+            const chars = 'abcdef0123456789';
+            let token = '';
+            for (let i = 0; i < 80; i++) {
+                token += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            currentToken = token;
+            localStorage.setItem('authToken', currentToken);
+            updateAuthStatus();
+            alert('Demo token generated and set! You can now use all admin features.');
+        }
+
+        // Clear token
+        function clearToken() {
+            currentToken = null;
+            localStorage.removeItem('authToken');
+            updateAuthStatus();
+            alert('Token berhasil dihapus!');
+        }
+
+        // API request helper
+        async function apiRequest(endpoint, options = {}) {
+            const url = `${API_BASE}${endpoint}`;
+            const config = {
+                headers: {
+                    'Accept': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+
+            // Don't set Content-Type for FormData (let browser handle it)
+            if (!(options.body instanceof FormData) && !options.isFormData) {
+                config.headers['Content-Type'] = 'application/json';
+            }
+
+            if (currentToken && !options.noAuth) {
+                config.headers['Authorization'] = `Bearer ${currentToken}`;
+            }
+
+            try {
+                const response = await fetch(url, config);
+                
+                // Get response text first to debug
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                // Try to parse as JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON Parse Error:', parseError);
+                    console.error('Response text:', responseText);
+                    
+                    // Return error with raw response for debugging
+                    return {
+                        status: response.status,
+                        success: false,
+                        data: { 
+                            message: 'JSON Parse Error: ' + parseError.message,
+                            raw_response: responseText.substring(0, 1000) + (responseText.length > 1000 ? '...' : '')
+                        }
+                    };
+                }
+                
+                return {
+                    status: response.status,
+                    success: response.ok,
+                    data: data
+                };
+            } catch (error) {
+                console.error('Network Error:', error);
+                return {
+                    status: 0,
+                    success: false,
+                    data: { message: 'Network error: ' + error.message }
+                };
+            }
+        }
+
+        // Display response
+        function displayResponse(containerId, contentId, response) {
+            const container = document.getElementById(containerId);
+            const content = document.getElementById(contentId);
+            
+            container.style.display = 'block';
+            content.textContent = JSON.stringify(response.data, null, 2);
+            
+            // Add status indicator
+            let statusEl = container.querySelector('.status-indicator');
+            if (statusEl) statusEl.remove();
+            
+            statusEl = document.createElement('div');
+            statusEl.className = `status-indicator ${response.success ? 'status-success' : 'status-error'}`;
+            statusEl.textContent = `Status: ${response.status} - ${response.success ? 'Success' : 'Error'}`;
+            container.appendChild(statusEl);
+        }
+
+        // Authentication functions
+        async function adminLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await apiRequest('/admin/login', {
+                method: 'POST',
+                body: JSON.stringify({
+                    login: email,
+                    password: password
+                }),
+                noAuth: true
+            });
+
+            if (response.success && response.data.data && response.data.data.token) {
+                currentToken = response.data.data.token;
+                localStorage.setItem('authToken', currentToken);
+                updateAuthStatus();
+            }
+
+            displayResponse('loginResponse', 'loginResponseContent', response);
+        }
+
+        async function adminRegister() {
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+            const response = await apiRequest('/admin/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    password: password,
+                    password_confirmation: passwordConfirm
+                }),
+                noAuth: true
+            });
+
+            displayResponse('registerResponse', 'registerResponseContent', response);
+        }
+
+        async function getProfile() {
+            const response = await apiRequest('/admin/profile');
+            displayResponse('adminResponse', 'adminResponseContent', response);
+        }
+
+        async function testToken() {
+            const response = await apiRequest('/test-token');
+            displayResponse('adminResponse', 'adminResponseContent', response);
+        }
+
+        function showChangePassword() {
+            const form = document.getElementById('changePasswordForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function changePassword() {
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const newPassConfirm = document.getElementById('newPasswordConfirm').value;
+
+            const response = await apiRequest('/admin/change-password', {
+                method: 'POST',
+                body: JSON.stringify({
+                    current_password: currentPass,
+                    new_password: newPass,
+                    new_password_confirmation: newPassConfirm
+                })
+            });
+
+            displayResponse('adminResponse', 'adminResponseContent', response);
+        }
+
+        async function adminLogout() {
+            const response = await apiRequest('/admin/logout', {
+                method: 'POST'
+            });
+
+            if (response.success) {
+                currentToken = null;
+                localStorage.removeItem('authToken');
+                updateAuthStatus();
+            }
+
+            displayResponse('adminResponse', 'adminResponseContent', response);
+        }
+
+        // Jurnal functions
+        async function getAllJurnal() {
+            const search = document.getElementById('searchKeyword').value;
+            const subject = document.getElementById('subjectFilter').value;
+            const akreditasi = document.getElementById('akreditasiFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            let queryParams = new URLSearchParams();
+            if (search) queryParams.append('search', search);
+            if (subject) queryParams.append('subject', subject);
+            if (akreditasi) queryParams.append('akreditasi', akreditasi);
+            if (sortBy) queryParams.append('sort_by', sortBy);
+            if (sortOrder) queryParams.append('order', sortOrder);
+
+            const endpoint = `/jurnal${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+            const response = await apiRequest(endpoint, { noAuth: true });
+            displayResponse('jurnalListResponse', 'jurnalListContent', response);
+        }
+
+        async function getTopViewsJurnal() {
+            const limit = document.getElementById('topViewsLimit').value;
+            const subject = document.getElementById('topViewsSubject').value;
+
+            let queryParams = new URLSearchParams();
+            queryParams.append('sort_by', 'views');
+            queryParams.append('order', 'desc');
+            if (limit) queryParams.append('per_page', limit);
+            if (subject) queryParams.append('subject', subject);
+
+            const endpoint = `/jurnal?${queryParams.toString()}`;
+            const response = await apiRequest(endpoint, { noAuth: true });
+            displayResponse('topViewsResponse', 'topViewsContent', response);
+        }
+
+        async function getAdvancedJurnal() {
+            const sortBy = document.getElementById('advancedSortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+            const perPage = document.getElementById('perPage').value;
+            const page = document.getElementById('pageNumber').value;
+
+            let queryParams = new URLSearchParams();
+            if (sortBy) queryParams.append('sort_by', sortBy);
+            if (sortOrder) queryParams.append('order', sortOrder);
+            if (perPage) queryParams.append('per_page', perPage);
+            if (page) queryParams.append('page', page);
+
+            const endpoint = `/jurnal${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+            const response = await apiRequest(endpoint, { noAuth: true });
+            displayResponse('advancedResponse', 'advancedContent', response);
+        }
+
+        async function getJurnalById() {
+            const id = document.getElementById('jurnalId').value;
+            const response = await apiRequest(`/jurnal/${id}`, { noAuth: true });
+            displayResponse('jurnalDetailResponse', 'jurnalDetailContent', response);
+        }
+
+        async function getSubjects() {
+            const response = await apiRequest('/jurnal/subjects', { noAuth: true });
+            displayResponse('jurnalListResponse', 'jurnalListContent', response);
+        }
+
+        async function getAkreditasi() {
+            const response = await apiRequest('/jurnal/akreditasi', { noAuth: true });
+            displayResponse('jurnalListResponse', 'jurnalListContent', response);
+        }
+
+        async function getApiStatus() {
+            const response = await apiRequest('/status', { noAuth: true });
+            displayResponse('statusResponse', 'statusContent', response);
+        }
+
+        async function generateSampleData() {
+            const response = await apiRequest('/sample/generate', {
+                method: 'POST',
+                noAuth: true
+            });
+            displayResponse('sampleResponse', 'sampleContent', response);
+        }
+
+        async function getSampleStats() {
+            const response = await apiRequest('/sample/stats', { noAuth: true });
+            displayResponse('sampleResponse', 'sampleContent', response);
+        }
+
+        // Admin jurnal functions
+        async function createJurnal() {
+            const formData = new FormData();
+            formData.append('judul', document.getElementById('createJudul').value);
+            formData.append('subject', document.getElementById('createSubject').value);
+            formData.append('akreditasi', document.getElementById('createAkreditasi').value);
+            formData.append('penerbit', document.getElementById('createPenerbit').value);
+            formData.append('link_akreditasi', document.getElementById('createLinkAkreditasi').value);
+            formData.append('link_penerbit', document.getElementById('createLinkPenerbit').value);
+            formData.append('deskripsi', document.getElementById('createDeskripsi').value);
+            
+            const fotoFile = document.getElementById('createFoto').files[0];
+            if (fotoFile) {
+                formData.append('foto', fotoFile);
+            }
+
+            const response = await apiRequest('/admin/jurnal', {
+                method: 'POST',
+                body: formData
+            });
+
+            displayResponse('createResponse', 'createResponseContent', response);
+        }
+
+        async function updateJurnal() {
+            const id = document.getElementById('updateId').value;
+            const formData = new FormData();
+            
+            const judul = document.getElementById('updateJudul').value;
+            const subject = document.getElementById('updateSubject').value;
+            const akreditasi = document.getElementById('updateAkreditasi').value;
+            
+            if (judul) formData.append('judul', judul);
+            if (subject) formData.append('subject', subject);
+            if (akreditasi) formData.append('akreditasi', akreditasi);
+            
+            const fotoFile = document.getElementById('updateFoto').files[0];
+            if (fotoFile) {
+                formData.append('foto', fotoFile);
+            }
+
+            // Use POST with _method override for PUT
+            formData.append('_method', 'PUT');
+
+            const response = await apiRequest(`/admin/jurnal/${id}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            displayResponse('updateResponse', 'updateResponseContent', response);
+        }
+
+        async function deleteJurnal() {
+            const id = document.getElementById('deleteId').value;
+            const response = await apiRequest(`/admin/jurnal/${id}`, {
+                method: 'DELETE'
+            });
+
+            displayResponse('deleteResponse', 'deleteResponseContent', response);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthStatus();
+        });
+    </script>
+</body>
+</html>

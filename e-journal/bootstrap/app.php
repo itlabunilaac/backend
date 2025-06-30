@@ -20,11 +20,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\AdminAuth::class,
         ]);
-        
-        // Add CORS middleware to API routes
-        $middleware->group('api', [
-            \App\Http\Middleware\Cors::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

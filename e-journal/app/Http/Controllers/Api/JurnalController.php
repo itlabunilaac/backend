@@ -35,9 +35,11 @@ class JurnalController extends Controller
         // Sort by views or other fields
         if ($request->has('sort_by')) {
             $sortBy = $request->sort_by;
-            $sortOrder = $request->get('sort_order', 'desc'); // default desc
+            $sortOrder = $request->get('order', $request->get('sort_order', 'desc')); // support both 'order' and 'sort_order'
             
-            if (in_array($sortBy, ['views', 'created_at', 'judul'])) {
+            // Allow more sort fields
+            $allowedSortFields = ['views', 'created_at', 'updated_at', 'judul', 'penulis'];
+            if (in_array($sortBy, $allowedSortFields)) {
                 $query->orderBy($sortBy, $sortOrder);
             }
         } else {
@@ -45,14 +47,24 @@ class JurnalController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        // Pagination
+        // Pagination with validation
         $perPage = $request->get('per_page', 10);
+        $perPage = min(max((int)$perPage, 1), 50); // limit between 1-50
+
         $journals = $query->paginate($perPage);
 
         return response()->json([
             'success' => true,
             'message' => 'Journals retrieved successfully',
-            'data' => $journals
+            'data' => $journals,
+            'meta' => [
+                'current_page' => $journals->currentPage(),
+                'last_page' => $journals->lastPage(),
+                'per_page' => $journals->perPage(),
+                'total' => $journals->total(),
+                'from' => $journals->firstItem(),
+                'to' => $journals->lastItem()
+            ]
         ], 200);
     }
 
