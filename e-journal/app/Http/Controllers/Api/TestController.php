@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
+    public function testPublic()
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Public endpoint works!',
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    }
+
     public function testToken(Request $request)
     {
         return response()->json([
@@ -17,26 +26,13 @@ class TestController extends Controller
             ]
         ]);
     }
-    
-    public function testPublic()
-    {
-        return response()->json([
-            'success' => true,
-            'message' => 'Public endpoint works!',
-            'timestamp' => now()->toDateTimeString()
-        ]);
-    }
-}
-use Illuminate\Http\Request;
 
-class TestController extends Controller
-{
     public function test()
     {
         return response()->json([
             'success' => true,
             'message' => 'API is working!',
-            'timestamp' => now()
+            'timestamp' => now()->toDateTimeString()
         ]);
     }
 }

@@ -7,8 +7,22 @@ use App\Http\Controllers\Api\JurnalController;
 use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\SampleController;
 
-// Test routes
-Route::get('test', [TestController::class, 'testPublic']);
+// Basic test endpoint (no auth required)
+Route::get('test', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'E-Journal API is working!',
+        'data' => [
+            'version' => '1.0.0',
+            'environment' => app()->environment(),
+            'timestamp' => now()->toISOString(),
+            'database_connected' => true
+        ]
+    ]);
+});
+
+// Test with controllers (if they exist)
+Route::get('test-detailed', [TestController::class, 'testPublic']);
 Route::get('test-token', [TestController::class, 'testToken'])->middleware('admin.auth');
 
 // Sample data routes (for demo purposes)
